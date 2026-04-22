@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900" role="img" aria-label="No poster">
+  <rect width="600" height="900" fill="#1f2937"/>
+  <rect x="60" y="80" width="480" height="740" rx="24" fill="#374151"/>
+  <circle cx="300" cy="320" r="72" fill="#9ca3af"/>
+  <rect x="160" y="460" width="280" height="28" rx="14" fill="#9ca3af"/>
+  <rect x="130" y="520" width="340" height="22" rx="11" fill="#6b7280"/>
+  <text x="300" y="610" text-anchor="middle" fill="#e5e7eb" font-family="Arial, sans-serif" font-size="40" font-weight="700">NO POSTER</text>
+</svg>
