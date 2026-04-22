@@ -1,0 +1,73 @@
+<div class="favorites-container">
+  <div class="favorites-header">
+    <h1>⭐ Favorite films</h1>
+    <p>Your personal collection</p>
+  </div>
+
+  <!-- Индикатор загрузки -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!-- Ошибка -->
+  <div *ngIf="error && !loading" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && favorites.length === 0" class="empty-state">
+    <div class="empty-icon">📽️</div>
+    <h2>Favorite list is empty</h2>
+    <p>Add films to favorites to quickly find them later</p>
+    <a routerLink="/films" class="btn btn-primary">
+      Go to the catalog
+    </a>
+  </div>
+
+  <!-- Список избранных фильмов -->
+  <div *ngIf="!loading && favorites.length > 0" class="favorites-grid">
+    <div *ngFor="let favorite of favorites" class="favorite-item">
+      <a [routerLink]="['/films', favorite.film.id]" class="film-link">
+        <!-- Постер -->
+        <div class="film-poster">
+          <img 
+            [src]="favorite.film.poster" 
+            [alt]="favorite.film.title"
+            onerror="this.src='assets/images/no-poster.svg'"
+          >
+          <div class="film-rating">
+            ⭐ {{ favorite.film.average_rating || 'N/A' }}
+          </div>
+        </div>
+
+        <!-- Информация -->
+        <div class="film-info">
+          <h3 class="film-title">{{ favorite.film.title }}</h3>
+          <div class="film-meta">
+            <span class="film-year">{{ favorite.film.year }}</span>
+            <span class="film-duration">{{ favorite.film.duration }} min</span>
+          </div>
+          <div class="film-genres">
+            <span *ngFor="let genre of favorite.film.genres" class="genre-badge">
+              {{ genre.name }}
+            </span>
+          </div>
+          <div class="film-stats">
+            <span>{{ favorite.film.reviews_count }} reviews</span>
+          </div>
+          <div class="added-date">
+            Added: {{ favorite.added_at | date:'dd.MM.yyyy' }}
+          </div>
+        </div>
+      </a>
+
+      <button 
+        (click)="removeFromFavorites(favorite)" 
+        class="btn-remove"
+        title="Remove from favorites"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+</div>

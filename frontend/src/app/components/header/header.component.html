@@ -1,0 +1,52 @@
+<!-- src/app/components/header/header.component.html -->
+
+<header class="main-header">
+  <nav class="navbar">
+    <div class="container">
+      <div class="nav-brand">
+        <a routerLink="/" class="logo">
+          <span class="logo-icon">🎬</span>
+          <span class="logo-text">MovieList</span>
+        </a>
+      </div>
+      
+      <ul class="nav-menu">
+        <li>
+          <a routerLink="/films" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
+            <span class="nav-icon">🎥</span>
+            Movies
+          </a>
+        </li>
+        <li *ngIf="isLoggedIn">
+          <a routerLink="/favorites" routerLinkActive="active">
+            <span class="nav-icon">⭐</span>
+            Favorites
+          </a>
+        </li>
+      </ul>
+      
+      <div class="nav-auth">
+        <ng-container *ngIf="!isLoggedIn">
+          <a routerLink="/login" class="btn btn-outline">
+            Login
+          </a>
+          <a routerLink="/register" class="btn btn-primary">
+            Register
+          </a>
+        </ng-container>
+        
+        <ng-container *ngIf="isLoggedIn">
+          <div class="user-menu">
+            <span class="user-name">
+              <span class="user-icon">👤</span>
+              {{ currentUser?.username }}
+            </span>
+            <button (click)="logout()" class="btn btn-outline btn-logout">
+              Logout
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </nav>
+</header>

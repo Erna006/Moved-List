@@ -1,0 +1,131 @@
+<!-- src/app/components/register/register.component.html -->
+
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h2>Register</h2>
+      <p>Create a new account</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Сообщение об успехе -->
+      <div *ngIf="success" class="alert alert-success">
+        ✓ Registration successful! Redirecting to login page...
+      </div>
+
+      <!-- Сообщение об ошибке -->
+      <div *ngIf="error" class="alert alert-error">
+        {{ error }}
+      </div>
+
+      <!-- Поле Username -->
+      <div class="form-group">
+        <label for="username">Username *</label>
+        <input 
+          type="text" 
+          id="username"
+          formControlName="username"
+          class="form-control"
+          [class.is-invalid]="submitted && f['username'].errors"
+          placeholder="Enter your username"
+        >
+        <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+          <div *ngIf="f['username'].errors['required']">
+            Username is required
+          </div>
+          <div *ngIf="f['username'].errors['minlength']">
+            Minimum 3 characters
+          </div>
+          <div *ngIf="f['username'].errors['maxlength']">
+            Maximum 150 characters
+          </div>
+        </div>
+      </div>
+
+      <!-- Поле Email -->
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          type="email" 
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.is-invalid]="submitted && f['email'].errors"
+          placeholder="Enter your email"
+        >
+        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+          <div *ngIf="f['email'].errors['required']">
+            Email is required
+          </div>
+          <div *ngIf="f['email'].errors['email']">
+            Enter a valid email
+          </div>
+        </div>
+      </div>
+
+      <!-- Поле Password -->
+      <div class="form-group">
+        <label for="password">Password *</label>
+        <input 
+          type="password" 
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [class.is-invalid]="submitted && f['password'].errors"
+          placeholder="Enter your password"
+        >
+        <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+          <div *ngIf="f['password'].errors['required']">
+            Password is required
+          </div>
+          <div *ngIf="f['password'].errors['minlength']">
+            Minimum 8 characters
+          </div>
+        </div>
+        <small class="form-text">Minimum 8 characters</small>
+      </div>
+
+      <!-- Поле Password Confirm -->
+      <div class="form-group">
+        <label for="password_confirm">Password confirmation *</label>
+        <input 
+          type="password" 
+          id="password_confirm"
+          formControlName="password_confirm"
+          class="form-control"
+          [class.is-invalid]="submitted && f['password_confirm'].errors"
+          placeholder="Repeat your password"
+        >
+        <div *ngIf="submitted && f['password_confirm'].errors" class="invalid-feedback">
+          <div *ngIf="f['password_confirm'].errors['required']">
+            Confirm your password
+          </div>
+          <div *ngIf="f['password_confirm'].errors['passwordMismatch']">
+            Passwords do not match
+          </div>
+        </div>
+      </div>
+
+      <!-- Кнопка отправки -->
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-block"
+        [disabled]="loading"
+      >
+        <span *ngIf="!loading">Register</span>
+        <span *ngIf="loading">
+          <span class="spinner"></span>
+          Registration...
+        </span>
+      </button>
+    </form>
+
+    <!-- Ссылка на вход -->
+    <div class="register-footer">
+      <p>
+        Already have an account? 
+        <a routerLink="/login" class="link">Login</a>
+      </p>
+    </div>
+  </div>
+</div>
