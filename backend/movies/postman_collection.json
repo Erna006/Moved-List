@@ -1,0 +1,177 @@
+{
+  "info": {
+    "name": "Movie API Collection",
+    "_postman_id": "0f1d8b79-cd0f-4db4-8a4b-5d63a4a6d182",
+    "description": "Collection for Django DRF movie project endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/health/"
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"status\": \"ok\",\n  \"service\": \"movies-api\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"demo_user\",\n  \"email\": \"demo@example.com\",\n  \"password\": \"Password123\",\n  \"password_confirm\": \"Password123\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/register/"
+      },
+      "response": [
+        {
+          "name": "201 Created",
+          "status": "Created",
+          "code": 201,
+          "body": "{\n  \"message\": \"User successfully registered\",\n  \"user\": {\n    \"id\": 1,\n    \"username\": \"demo_user\",\n    \"email\": \"demo@example.com\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Login (JWT)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"demo_user\",\n  \"password\": \"Password123\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/login/"
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"refresh\": \"<refresh_token>\",\n  \"access\": \"<access_token>\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Create Review",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"film\": 1,\n  \"rating\": 9,\n  \"comment\": \"Отличный фильм!\"\n}"
+        },
+        "url": "{{baseUrl}}/reviews/"
+      },
+      "response": [
+        {
+          "name": "201 Created",
+          "status": "Created",
+          "code": 201,
+          "body": "{\n  \"id\": 1,\n  \"film\": 1,\n  \"rating\": 9,\n  \"comment\": \"Отличный фильм!\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Create Favorite",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"film_id\": 1\n}"
+        },
+        "url": "{{baseUrl}}/favorites/"
+      },
+      "response": [
+        {
+          "name": "201 Created",
+          "status": "Created",
+          "code": 201,
+          "body": "{\n  \"id\": 1,\n  \"film\": {\n    \"id\": 1,\n    \"title\": \"Film title\"\n  },\n  \"added_at\": \"2026-04-22T12:00:00Z\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"refresh\": \"{{refreshToken}}\"\n}"
+        },
+        "url": "{{baseUrl}}/auth/logout/"
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"message\": \"Logged out successfully\"\n}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000/api"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    }
+  ]
+}
