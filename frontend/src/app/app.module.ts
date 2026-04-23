@@ -6,8 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-
-// Компоненты
 import { FilmListComponent } from './components/film-list/film-list.component';
 import { FilmDetailComponent } from './components/film-detail/film-detail.component';
 import { LoginComponent } from './components/login/login.component';

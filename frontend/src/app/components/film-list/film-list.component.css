@@ -1,5 +1,3 @@
-/* src/app/components/film-list/film-list.component.css */
-
 .film-list-container {
   max-width: 1800px;
   margin: 0 auto;
@@ -7,15 +5,21 @@
   background-image: url('/assets/images/Fon.jpg');
 }
 
-/* Заголовок и поиск */
 .header-section {
   margin-bottom: 30px;
 }
 
 .header-section h1 {
-  font-size: 3.5em;
-  margin-bottom: 20px;
-  color: #cda5ee;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-style: italic;
+  text-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #1b2712,
+    0 0 42px #e50914,
+    0 0 82px #e50914;
 }
 
 .search-box {
@@ -53,14 +57,12 @@
   background: #0056b3;
 }
 
-/* Основной контейнер */
 .content-wrapper {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 30px;
 }
 
-/* Боковая панель фильтров */
 .filters-sidebar {
   background: #f8f9fa;
   padding: 20px;
@@ -137,13 +139,13 @@
 .reset-btn:hover {
   background: #c82333;
 }
-
-/* Основной контент */
 .films-main {
   min-height: 500px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  align-content: start;
 }
-
-/* Индикатор загрузки */
 .loading {
   text-align: center;
   padding: 50px;
@@ -160,29 +162,36 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* Сетка фильмов */
 .films-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 25px;
 }
 
-/* Карточка фильма */
 .film-card {
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
+  width: 100%;
 }
 
-.film-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+.film-card:hover .film-poster img {
+  opacity: 0;
+}
+
+.film-card:hover .trailer-video {
+  opacity: 1;
 }
 
 .film-link {
@@ -193,8 +202,10 @@
 
 .film-poster {
   position: relative;
-  padding-top: 150%; /* 2:3 aspect ratio */
-  background: #f0f0f0;
+  padding-top: 150%;
+  background: #000;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
 }
 
 .film-poster img {
@@ -204,6 +215,20 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+
+.trailer-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 .film-rating {
@@ -258,20 +283,17 @@
   color: #999;
   font-size: 13px;
 }
-
-/* Сообщение "не найдено" */
 .no-results {
   text-align: center;
   padding: 50px;
   color: #666;
+  grid-column: 1 / -1;
 }
 
 .no-results p {
   font-size: 1.2em;
   margin-bottom: 20px;
 }
-
-/* Пагинация */
 .pagination {
   display: flex;
   justify-content: center;
@@ -279,6 +301,12 @@
   gap: 10px;
   margin-top: 40px;
   padding: 20px 0;
+  grid-column: 1 / -1;
+}
+
+.loading,
+.error-message {
+  grid-column: 1 / -1;
 }
 
 .page-btn {
@@ -326,28 +354,17 @@
   border-color: #007bff;
 }
 
-/* Адаптивность */
 @media (max-width: 1024px) {
   .content-wrapper {
     grid-template-columns: 1fr;
   }
-  
+
   .filters-sidebar {
     position: static;
   }
-  
-  .films-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-}
 
-@media (max-width: 768px) {
-  .films-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-  }
-  
-  .header-section h1 {
-    font-size: 2em;
+  .films-main {
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
   }
 }

@@ -1,5 +1,3 @@
-<!-- src/app/components/login/login.component.html -->
-
 <div class="login-container">
   <div class="login-card">
     <div class="login-header">
@@ -8,12 +6,9 @@
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <!-- Сообщение об ошибке -->
       <div *ngIf="error" class="alert alert-error">
         {{ error }}
       </div>
-
-      <!-- Поле Username -->
       <div class="form-group">
         <label for="username">Username</label>
         <input 
@@ -30,8 +25,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Поле Password -->
       <div class="form-group">
         <label for="password">Password</label>
         <input 
@@ -48,8 +41,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Кнопка отправки -->
       <button 
         type="submit" 
         class="btn btn-primary btn-block"
@@ -62,8 +53,6 @@
         </span>
       </button>
     </form>
-
-    <!-- Ссылка на регистрацию -->
     <div class="login-footer">
       <p>
         No account? 

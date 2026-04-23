@@ -12,9 +12,6 @@ export class GenreService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Получить список всех жанров
-   */
   getGenres(): Observable<Genre[]> {
     return this.http.get<Genre[]>(this.apiUrl);
   }

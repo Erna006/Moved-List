@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Avg
-
-# Create your models here.
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
@@ -64,14 +62,10 @@ class Film(models.Model):
     duration = models.PositiveIntegerField(help_text="Duration in minutes")
     poster = models.ImageField(upload_to='posters/')
     trailer_url = models.FileField(upload_to='trailers/', blank=True, null=True)
-    
-    # Relations many-to-many
     genres = models.ManyToManyField(Genre, related_name='films')
     countries = models.ManyToManyField(Country, related_name='films')
     languages = models.ManyToManyField(Language, related_name='films')
     actors = models.ManyToManyField(Actor, through='FilmActor', related_name='films',)
-    
-    #  Time stamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -89,18 +83,15 @@ class Film(models.Model):
     
     @property
     def average_rating(self):
-        """Calculates the average rating of the film"""
         avg = self.reviews.aggregate(Avg('rating'))['rating__avg']
         return round(avg, 1) if avg else 0
     
     @property
     def reviews_count(self):
-        """Calculates the number of reviews for the film"""
         return self.reviews.count()
 
 
 class FilmActor(models.Model):
-    """Intermediate model for linking films and actors"""
     film = models.ForeignKey(Film, on_delete=models.CASCADE)
     actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
     role = models.CharField(max_length=200, blank=True)
@@ -117,7 +108,6 @@ class FilmActor(models.Model):
 
 
 class Review(models.Model):
-    """Model for storing reviews of films"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     film = models.ForeignKey(Film, on_delete=models.CASCADE, related_name='reviews')
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
@@ -139,7 +129,6 @@ class Review(models.Model):
 
 
 class Favorite(models.Model):
-    """Model for storing favorite films of a user"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
     film = models.ForeignKey(Film, on_delete=models.CASCADE, related_name='favorited_by')
     added_at = models.DateTimeField(auto_now_add=True)

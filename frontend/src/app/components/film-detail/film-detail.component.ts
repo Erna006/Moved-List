@@ -1,5 +1,3 @@
-// src/app/components/film-detail/film-detail.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -18,14 +16,12 @@ export class FilmDetailComponent implements OnInit {
   loading = true;
   error = '';
   actionError = '';
-  
-  // Отзывы
+
   reviewForm!: FormGroup;
   submittingReview = false;
   userReview: Review | null = null;
   editingReview = false;
-  
-  // Избранное
+
   isFavorite = false;
   favoriteLoading = false;
 
@@ -48,7 +44,7 @@ export class FilmDetailComponent implements OnInit {
     if (filmId) {
       this.loadFilm(filmId);
     } else {
-      this.error = 'Неверный ID фильма';
+      this.error = 'Invalid film ID';
       this.loading = false;
     }
   }
@@ -61,8 +57,7 @@ export class FilmDetailComponent implements OnInit {
       next: (film) => {
         this.film = film;
         this.loading = false;
-        
-        // Проверяем, есть ли отзыв от текущего пользователя
+
         if (this.authService.isLoggedIn() && film.reviews) {
           const currentUser = this.authService.currentUserValue;
           this.userReview = film.reviews.find(r => r.user.id === currentUser?.id) || null;
@@ -75,14 +70,13 @@ export class FilmDetailComponent implements OnInit {
           }
         }
       },
-      error: (err) => {
-        this.error = 'Фильм не найден';
+      error: () => {
+        this.error = 'Film not found';
         this.loading = false;
       }
     });
   }
 
-  // Управление избранным
   toggleFavorite(): void {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login'], { 
@@ -97,7 +91,6 @@ export class FilmDetailComponent implements OnInit {
     this.actionError = '';
 
     if (this.isFavorite) {
-      // Удалить из избранного
       this.filmService.removeFromFavorites(this.film.id).subscribe({
         next: () => {
           this.isFavorite = false;
@@ -105,11 +98,10 @@ export class FilmDetailComponent implements OnInit {
         },
         error: () => {
           this.favoriteLoading = false;
-          this.actionError = 'Не удалось удалить фильм из избранного.';
+          this.actionError = 'Failed to remove the film from favorites.';
         }
       });
     } else {
-      // Добавить в избранное
       this.filmService.addToFavorites(this.film.id).subscribe({
         next: () => {
           this.isFavorite = true;
@@ -117,13 +109,12 @@ export class FilmDetailComponent implements OnInit {
         },
         error: () => {
           this.favoriteLoading = false;
-          this.actionError = 'Не удалось добавить фильм в избранное.';
+          this.actionError = 'Failed to add the film to favorites.';
         }
       });
     }
   }
 
-  // Отправка отзыва
   submitReview(): void {
     if (this.reviewForm.invalid || !this.film) {
       return;
@@ -146,7 +137,6 @@ export class FilmDetailComponent implements OnInit {
     };
 
     if (this.userReview && this.editingReview) {
-      // Обновление существующего отзыва
       this.reviewService.updateReview(this.userReview.id, {
         rating: reviewData.rating,
         comment: reviewData.comment
@@ -155,34 +145,32 @@ export class FilmDetailComponent implements OnInit {
           this.userReview = review;
           this.editingReview = false;
           this.submittingReview = false;
-          this.loadFilm(this.film!.id); // Перезагружаем фильм для обновления рейтинга
+          this.loadFilm(this.film!.id);
         },
         error: () => {
           this.submittingReview = false;
-          this.actionError = 'Ошибка при обновлении отзыва.';
+          this.actionError = 'Failed to update the review.';
         }
       });
     } else {
-      // Создание нового отзыва
       this.reviewService.createReview(reviewData).subscribe({
         next: (review) => {
           this.userReview = review;
           this.submittingReview = false;
-          this.loadFilm(this.film!.id); // Перезагружаем фильм для обновления рейтинга
+          this.loadFilm(this.film!.id);
         },
         error: (err) => {
           this.submittingReview = false;
           if (err.status === 400) {
-            this.actionError = 'Вы уже оставили отзыв на этот фильм.';
+            this.actionError = 'You have already left a review for this film.';
           } else {
-            this.actionError = 'Ошибка при создании отзыва.';
+            this.actionError = 'Failed to create the review.';
           }
         }
       });
     }
   }
 
-  // Редактирование отзыва
   startEditReview(): void {
     this.editingReview = true;
   }
@@ -197,11 +185,10 @@ export class FilmDetailComponent implements OnInit {
     }
   }
 
-  // Удаление отзыва
   deleteReview(): void {
     if (!this.userReview) return;
 
-    if (confirm('Вы уверены, что хотите удалить свой отзыв?')) {
+    if (confirm('Are you sure you want to delete your review?')) {
       this.reviewService.deleteReview(this.userReview.id).subscribe({
         next: () => {
           this.userReview = null;
@@ -209,7 +196,7 @@ export class FilmDetailComponent implements OnInit {
           this.loadFilm(this.film!.id);
         },
         error: () => {
-          this.actionError = 'Ошибка при удалении отзыва.';
+          this.actionError = 'Failed to delete the review.';
         }
       });
     }

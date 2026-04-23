@@ -1,4 +1,3 @@
-// src/app/components/film-list/film-list.component.ts
 
 import { Component, OnInit } from '@angular/core';
 import { FilmService } from '../../services/film.service';
@@ -17,30 +16,30 @@ export class FilmListComponent implements OnInit {
   genres: Genre[] = [];
   countries: Country[] = [];
   languages: Language[] = [];
-
-  // Фильтры
   filters: FilmFilters = {
     page: 1
   };
-
-  // Состояние загрузки
   loading = false;
   error = '';
-
-  // Пагинация
   totalCount = 0;
   currentPage = 1;
   pageSize = 20;
 
-  onHover(film: any): void {
-    film.showTrailer = true;
+  onHover(video: HTMLVideoElement): void {
+    if (video && video.src && video.src !== window.location.href) {
+      video.play().catch(() => {
+        console.debug('Autoplay prevented');
+      });
+    }
   }
 
-  onLeave(film: any): void {
-    film.showTrailer = false;
+  onLeave(video: HTMLVideoElement): void {
+    if (video && video.src && video.src !== window.location.href) {
+      video.pause();
+      video.currentTime = 0;
+    }
   }
 
-  // Опции сортировки
   sortOptions = [
     { value: '-year', label: 'Year (newest first)' },
     { value: 'year', label: 'Year (oldest first)' },
@@ -62,9 +61,6 @@ export class FilmListComponent implements OnInit {
     this.loadFilms();
   }
 
-  /**
-   * Загрузить опции для фильтров
-   */
   loadFilters(): void {
     this.genreService.getGenres().subscribe({
       next: (genres) => this.genres = genres,
@@ -88,26 +84,20 @@ export class FilmListComponent implements OnInit {
     });
   }
 
-  /**
-   * Загрузить фильмы с учетом фильтров
-   */
   loadFilms(): void {
     this.loading = true;
     this.error = '';
 
     this.filmService.getFilms(this.filters).subscribe({
       next: (response: any) => {
-        // Проверка на массив (ваш текущий случай)
         if (Array.isArray(response)) {
           this.films = response;
           this.totalCount = response.length;
         }
-        // Проверка на объект с ключом results (стандарт DRF с пагинацией)
         else if (response && response.results) {
           this.films = response.results;
           this.totalCount = response.count;
-        }
-        else {
+        } else {
           this.films = [];
           this.totalCount = 0;
         }
@@ -123,43 +113,28 @@ export class FilmListComponent implements OnInit {
     });
   }
 
-  /**
-   * Apply filters
-   */
   applyFilters(): void {
-    this.filters.page = 1; // Reset to first page
+    this.filters.page = 1;
     this.currentPage = 1;
     this.loadFilms();
   }
 
-  /**
-   * Reset all filters
-   */
   resetFilters(): void {
     this.filters = { page: 1 };
     this.currentPage = 1;
     this.loadFilms();
   }
 
-  /**
-   * Search by title
-   */
   onSearchChange(searchTerm: string): void {
     this.filters.search = searchTerm || undefined;
     this.applyFilters();
   }
 
-  /**
-   * Change sorting
-   */
   onSortChange(ordering: string): void {
     this.filters.ordering = ordering;
     this.applyFilters();
   }
 
-  /**
-   * Pagination - go to page
-   */
   onPageChange(page: number): void {
     this.currentPage = page;
     this.filters.page = page;
@@ -167,9 +142,6 @@ export class FilmListComponent implements OnInit {
     window.scrollTo(0, 0);
   }
 
-  /**
-   * Get array of pages for pagination
-   */
   getPages(): number[] {
     const totalPages = Math.ceil(this.totalCount / this.pageSize);
     return Array.from({ length: totalPages }, (_, i) => i + 1);

@@ -1,13 +1,9 @@
-<!-- src/app/components/film-detail/film-detail.component.html -->
-
 <div class="film-detail-container">
-  <!-- Индикатор загрузки -->
   <div *ngIf="loading" class="loading">
     <div class="spinner"></div>
     <p>Loading...</p>
   </div>
 
-  <!-- Ошибка -->
   <div *ngIf="error && !loading" class="error-message">
     <h2>{{ error }}</h2>
     <button (click)="goBack()" class="btn btn-primary">
@@ -15,14 +11,11 @@
     </button>
   </div>
 
-  <!-- Детали фильма -->
   <div *ngIf="film && !loading" class="film-content">
-    <!-- Кнопка назад -->
     <button (click)="goBack()" class="btn-back">
       ← Return to the list
     </button>
 
-    <!-- Верхняя секция с постером -->
     <div class="film-header">
       <div class="poster-section">
         <img 
@@ -50,14 +43,12 @@
           </span>
         </div>
 
-        <!-- Жанры -->
         <div class="film-genres">
           <span *ngFor="let genre of film.genres" class="genre-badge">
             {{ genre.name }}
           </span>
         </div>
 
-        <!-- Страны -->
         <div class="film-countries" *ngIf="film.countries && film.countries.length > 0">
           <strong>Countries:</strong>
           <span *ngFor="let country of film.countries; let last = last">
@@ -65,7 +56,6 @@
           </span>
         </div>
 
-        <!-- Языки -->
         <div class="film-languages" *ngIf="film.languages && film.languages.length > 0">
           <strong>Languages:</strong>
           <span *ngFor="let language of film.languages; let last = last">
@@ -73,7 +63,6 @@
           </span>
         </div>
 
-        <!-- Кнопка избранного -->
         <button 
           (click)="toggleFavorite()" 
           class="btn-favorite"
@@ -92,13 +81,11 @@
       </div>
     </div>
 
-    <!-- Описание -->
     <div class="film-description">
       <h2>Description</h2>
       <p>{{ film.description }}</p>
     </div>
 
-    <!-- Актеры -->
     <div class="film-actors" *ngIf="film.film_actors && film.film_actors.length > 0">
       <h2>In the cast</h2>
       <div class="actors-grid">
@@ -117,11 +104,9 @@
       </div>
     </div>
 
-    <!-- Секция отзывов -->
     <div class="reviews-section">
       <h2>Reviews</h2>
 
-      <!-- Форма добавления отзыва -->
       <div class="review-form" *ngIf="authService.isLoggedIn()">
         <h3 *ngIf="!userReview">Leave a review</h3>
         <h3 *ngIf="userReview && !editingReview">Your review</h3>
@@ -211,13 +196,12 @@
           <a routerLink="/login" [queryParams]="{returnUrl: '/films/' + film.id}">
             Login
           </a> 
-          или 
+          or 
           <a routerLink="/register">register</a>, 
           to leave a review
         </p>
       </div>
 
-      <!-- Список отзывов -->
       <div class="reviews-list">
         <div *ngIf="film.reviews && film.reviews.length === 0" class="no-reviews">
           No reviews yet. Be the first!

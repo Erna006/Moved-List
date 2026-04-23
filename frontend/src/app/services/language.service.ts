@@ -12,9 +12,6 @@ export class LanguageService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Получить список всех языков
-   */
   getLanguages(): Observable<Language[]> {
     return this.http.get<Language[]>(this.apiUrl);
   }

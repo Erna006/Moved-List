@@ -12,23 +12,14 @@ export class ReviewService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Создать отзыв
-   */
   createReview(review: { film: number; rating: number; comment: string }): Observable<Review> {
     return this.http.post<Review>(this.apiUrl, review);
   }
 
-  /**
-   * Обновить отзыв
-   */
   updateReview(id: number, review: { rating: number; comment: string }): Observable<Review> {
     return this.http.put<Review>(`${this.apiUrl}${id}/`, review);
   }
 
-  /**
-   * Удалить отзыв
-   */
   deleteReview(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }

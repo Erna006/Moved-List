@@ -1,17 +1,10 @@
-
-
 <div class="film-list-container">
   <div class="header-section">
     <h1>Search for a movie</h1>
-    
+
     <div class="search-box">
-      <input 
-        type="text" 
-        placeholder="Поиск по названию..." 
-        [(ngModel)]="filters.search"
-        (input)="onSearchChange($any($event.target).value)"
-        class="search-input"
-      >
+      <input type="text" placeholder="Search by title..." [(ngModel)]="filters.search"
+        (input)="onSearchChange($any($event.target).value)" class="search-input">
       <button class="search-btn">🔍</button>
     </div>
   </div>
@@ -22,11 +15,7 @@
 
       <div class="filter-group">
         <label>Sorting</label>
-        <select 
-          [(ngModel)]="filters.ordering" 
-          (change)="onSortChange($any($event.target).value)"
-          class="filter-select"
-        >
+        <select [(ngModel)]="filters.ordering" (change)="onSortChange($any($event.target).value)" class="filter-select">
           <option [value]="undefined">Default</option>
           <option *ngFor="let option of sortOptions" [value]="option.value">
             {{ option.label }}
@@ -36,11 +25,7 @@
 
       <div class="filter-group">
         <label>Genre</label>
-        <select 
-          [(ngModel)]="filters.genre" 
-          (change)="applyFilters()"
-          class="filter-select"
-        >
+        <select [(ngModel)]="filters.genre" (change)="applyFilters()" class="filter-select">
           <option [value]="undefined">All genres</option>
           <option *ngFor="let genre of genres" [value]="genre.id">
             {{ genre.name }}
@@ -50,11 +35,7 @@
 
       <div class="filter-group">
         <label>Country</label>
-        <select 
-          [(ngModel)]="filters.country" 
-          (change)="applyFilters()"
-          class="filter-select"
-        >
+        <select [(ngModel)]="filters.country" (change)="applyFilters()" class="filter-select">
           <option [value]="undefined">All countries</option>
           <option *ngFor="let country of countries" [value]="country.id">
             {{ country.name }}
@@ -62,14 +43,9 @@
         </select>
       </div>
 
-      <!-- Фильтр по языку -->
       <div class="filter-group">
         <label>Language</label>
-        <select 
-          [(ngModel)]="filters.language" 
-          (change)="applyFilters()"
-          class="filter-select"
-        >
+        <select [(ngModel)]="filters.language" (change)="applyFilters()" class="filter-select">
           <option [value]="undefined">All languages</option>
           <option *ngFor="let language of languages" [value]="language.id">
             {{ language.name }}
@@ -77,52 +53,29 @@
         </select>
       </div>
 
-      <!-- Фильтр по году -->
       <div class="filter-group">
         <label>Year of release</label>
         <div class="year-range">
-          <input 
-            type="number" 
-            placeholder="From" 
-            [(ngModel)]="filters.year_min"
-            (change)="applyFilters()"
-            class="year-input"
-          >
+          <input type="number" placeholder="From" [(ngModel)]="filters.year_min" (change)="applyFilters()"
+            class="year-input">
           <span>-</span>
-          <input 
-            type="number" 
-            placeholder="To" 
-            [(ngModel)]="filters.year_max"
-            (change)="applyFilters()"
-            class="year-input"
-          >
+          <input type="number" placeholder="To" [(ngModel)]="filters.year_max" (change)="applyFilters()"
+            class="year-input">
         </div>
       </div>
 
-      <!-- Фильтр по рейтингу -->
       <div class="filter-group">
         <label>Rating</label>
-        <input 
-          type="number" 
-          min="1" 
-          max="10" 
-          step="0.1"
-          placeholder="1-10" 
-          [(ngModel)]="filters.min_rating"
-          (change)="applyFilters()"
-          class="filter-input"
-        >
+        <input type="number" min="1" max="10" step="0.1" placeholder="1-10" [(ngModel)]="filters.min_rating"
+          (change)="applyFilters()" class="filter-input">
       </div>
 
-      <!-- Кнопка сброса -->
       <button class="reset-btn" (click)="resetFilters()">
         Reset filters
       </button>
     </aside>
 
-    <!-- Основной контент -->
     <main class="films-main">
-      <!-- Индикатор загрузки -->
       <div *ngIf="loading" class="loading">
         <div class="spinner"></div>
         <p>Loading...</p>
@@ -132,43 +85,29 @@
         <p>{{ error }}</p>
       </div>
 
-      <!-- Список фильмов -->
-      <div *ngIf="!loading && films.length > 0" class="films-grid">
-        <div *ngFor="let film of films" class="film-card">
-          <a [routerLink]="['/films', film.id]" class="film-link">
-            <!-- Постер -->
-            <div class="film-poster">
-              <img 
-                [src]="film.poster" 
-                [alt]="film.title"
-                onerror="this.src='assets/images/no-poster.svg'"
-              >
-              <div class="film-rating">
-                ⭐ {{ film.average_rating || 'N/A' }}
-              </div>
-            </div>
+      <div *ngFor="let film of films" class="film-card">
+        <a [routerLink]="['/films', film.id]" class="film-link">
 
-            <!-- Информация -->
-            <div class="film-info">
-              <h3 class="film-title">{{ film.title }}</h3>
-              <div class="film-meta">
-                <span class="film-year">{{ film.year }}</span>
-                <span class="film-duration">{{ film.duration }} min</span>
-              </div>
-              <div class="film-genres">
-                <span *ngFor="let genre of film.genres" class="genre-badge">
-                  {{ genre.name }}
-                </span>
-              </div>
-              <div class="film-stats">
-                <span>{{ film.reviews_count }} reviews</span>
-              </div>
+          <div class="film-poster" (mouseenter)="onHover(trailer)" (mouseleave)="onLeave(trailer)">
+
+            <img [src]="film.poster" [alt]="film.title" class="poster-img"
+              onerror="this.src='assets/images/no-poster.svg'">
+
+            <video #trailer [hidden]="!film.trailer_url" [src]="film.trailer_url" class="trailer-video" [muted]="false"
+              loop preload="metadata" playsinline>
+            </video>
+
+            <div class="film-rating">
+              ⭐ {{ film.average_rating || 'N/A' }}
             </div>
-          </a>
-        </div>
+          </div>
+
+          <div class="film-info">
+            <h3 class="film-title">{{ film.title }}</h3>
+          </div>
+        </a>
       </div>
 
-      <!-- Сообщение если ничего не найдено -->
       <div *ngIf="!loading && films.length === 0" class="no-results">
         <p>Movies not found</p>
         <button (click)="resetFilters()" class="reset-btn">
@@ -177,31 +116,20 @@
       </div>
 
       <div *ngIf="!loading && films.length > 0" class="pagination">
-        <button 
-          [disabled]="currentPage === 1"
-          (click)="onPageChange(currentPage - 1)"
-          class="page-btn"
-        >
+        <button [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)" class="page-btn">
           ← Back
         </button>
 
         <div class="page-numbers">
-          <button 
-            *ngFor="let page of getPages().slice(0, 10)" 
-            [class.active]="page === currentPage"
-            (click)="onPageChange(page)"
-            class="page-number"
-          >
+          <button *ngFor="let page of getPages().slice(0, 10)" [class.active]="page === currentPage"
+            (click)="onPageChange(page)" class="page-number">
             {{ page }}
           </button>
           <span *ngIf="getPages().length > 10">...</span>
         </div>
 
-        <button 
-          [disabled]="currentPage * pageSize >= totalCount"
-          (click)="onPageChange(currentPage + 1)"
-          class="page-btn"
-        >
+        <button [disabled]="currentPage * pageSize >= totalCount" (click)="onPageChange(currentPage + 1)"
+          class="page-btn">
           Forward →
         </button>
       </div>

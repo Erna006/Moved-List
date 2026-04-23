@@ -12,23 +12,14 @@ export class FavoriteService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Получить список избранных фильмов
-   */
   getFavorites(): Observable<Favorite[]> {
     return this.http.get<Favorite[]>(this.apiUrl);
   }
 
-  /**
-   * Добавить фильм в избранное
-   */
   addToFavorites(filmId: number): Observable<Favorite> {
     return this.http.post<Favorite>(this.apiUrl, { film_id: filmId });
   }
 
-  /**
-   * Удалить из избранного
-   */
   removeFromFavorites(favoriteId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${favoriteId}/`);
   }

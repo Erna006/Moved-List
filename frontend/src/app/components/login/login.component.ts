@@ -1,5 +1,3 @@
-// src/app/components/login/login.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -24,7 +22,6 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    // Если уже авторизован, перенаправляем
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
@@ -36,11 +33,9 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required]
     });
 
-    // Получаем URL для возврата после входа
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/films';
   }
 
-  // Удобный доступ к полям формы
   get f() {
     return this.loginForm.controls;
   }
@@ -49,7 +44,6 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
     this.error = '';
 
-    // Останавливаемся, если форма невалидна
     if (this.loginForm.invalid) {
       return;
     }
@@ -62,9 +56,9 @@ export class LoginComponent implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 401) {
-          this.error = 'Неверное имя пользователя или пароль';
+          this.error = 'Invalid username or password';
         } else {
-          this.error = 'Произошла ошибка при входе. Попробуйте позже.';
+          this.error = 'An error occurred during login. Please try again later.';
         }
         this.loading = false;
       }

@@ -1,5 +1,3 @@
-// src/app/components/header/header.component.ts
-
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
@@ -14,7 +12,7 @@ export class HeaderComponent {
   ) {}
 
   logout(): void {
-    if (confirm('Вы уверены, что хотите выйти?')) {
+    if (confirm('Are you sure you want to log out?')) {
       this.authService.logout();
     }
   }

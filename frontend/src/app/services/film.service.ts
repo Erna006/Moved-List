@@ -1,5 +1,3 @@
-// src/app/services/film.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -14,9 +12,6 @@ export class FilmService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Получить список фильмов с фильтрацией и поиском
-   */
   getFilms(filters?: FilmFilters): Observable<FilmListResponse> {
     let params = new HttpParams();
 
@@ -65,23 +60,14 @@ export class FilmService {
     return this.http.get<FilmListResponse>(this.apiUrl, { params });
   }
 
-  /**
-   * Получить детали конкретного фильма
-   */
   getFilm(id: number): Observable<Film> {
     return this.http.get<Film>(`${this.apiUrl}${id}/`);
   }
 
-  /**
-   * Добавить фильм в избранное
-   */
   addToFavorites(filmId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}${filmId}/add_to_favorites/`, {});
   }
 
-  /**
-   * Удалить фильм из избранного
-   */
   removeFromFavorites(filmId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}${filmId}/remove_from_favorites/`);
   }

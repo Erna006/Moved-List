@@ -305,8 +305,6 @@
   font-size: 13px;
   color: #999;
 }
-
-/* Адаптивность */
 @media (max-width: 768px) {
   .film-header {
     grid-template-columns: 1fr;

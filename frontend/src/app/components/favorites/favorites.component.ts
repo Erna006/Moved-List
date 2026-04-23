@@ -22,7 +22,6 @@ export class FavoritesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Проверяем авторизацию
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login'], {
         queryParams: { returnUrl: '/favorites' }
@@ -42,21 +41,21 @@ export class FavoritesComponent implements OnInit {
         this.favorites = favorites;
         this.loading = false;
       },
-      error: (err) => {
-        this.error = 'Ошибка при загрузке избранного';
+      error: () => {
+        this.error = 'Failed to load favorites';
         this.loading = false;
       }
     });
   }
 
   removeFromFavorites(favorite: Favorite): void {
-    if (confirm(`Удалить "${favorite.film.title}" из избранного?`)) {
+    if (confirm(`Remove "${favorite.film.title}" from favorites?`)) {
       this.favoriteService.removeFromFavorites(favorite.id).subscribe({
         next: () => {
           this.favorites = this.favorites.filter(f => f.id !== favorite.id);
         },
         error: () => {
-          this.error = 'Ошибка при удалении из избранного. Попробуйте еще раз.';
+          this.error = 'Failed to remove from favorites. Please try again.';
         }
       });
     }

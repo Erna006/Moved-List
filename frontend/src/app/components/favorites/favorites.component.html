@@ -4,13 +4,11 @@
     <p>Your personal collection</p>
   </div>
 
-  <!-- Индикатор загрузки -->
   <div *ngIf="loading" class="loading">
     <div class="spinner"></div>
     <p>Loading...</p>
   </div>
 
-  <!-- Ошибка -->
   <div *ngIf="error && !loading" class="error-message">
     {{ error }}
   </div>
@@ -24,11 +22,9 @@
     </a>
   </div>
 
-  <!-- Список избранных фильмов -->
   <div *ngIf="!loading && favorites.length > 0" class="favorites-grid">
     <div *ngFor="let favorite of favorites" class="favorite-item">
       <a [routerLink]="['/films', favorite.film.id]" class="film-link">
-        <!-- Постер -->
         <div class="film-poster">
           <img 
             [src]="favorite.film.poster" 
@@ -40,7 +36,6 @@
           </div>
         </div>
 
-        <!-- Информация -->
         <div class="film-info">
           <h3 class="film-title">{{ favorite.film.title }}</h3>
           <div class="film-meta">

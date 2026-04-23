@@ -1,5 +1,3 @@
-// src/app/interceptors/auth.interceptor.ts
-
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -15,21 +13,26 @@ import { AuthService } from '../services/auth.service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
+  private readonly authUrls = ['/auth/login/', '/auth/register/', '/auth/refresh/'];
 
   constructor(private authService: AuthService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Добавляем токен к запросу
+    const isAuthRequest = this.authUrls.some(url => request.url.includes(url));
     const token = this.authService.getAccessToken();
     
-    if (token) {
+    if (token && !isAuthRequest) {
       request = this.addToken(request, token);
     }
 
     return next.handle(request).pipe(
       catchError(error => {
-        if (error instanceof HttpErrorResponse && error.status === 401) {
-          // Если токен истек, пробуем обновить
+        if (
+          error instanceof HttpErrorResponse &&
+          error.status === 401 &&
+          !isAuthRequest &&
+          token
+        ) {
           return this.handle401Error(request, next);
         }
         return throwError(() => error);

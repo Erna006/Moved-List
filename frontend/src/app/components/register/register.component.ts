@@ -1,5 +1,3 @@
-// src/app/components/register/register.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -23,7 +21,6 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
-    // Если уже авторизован, перенаправляем
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
@@ -50,19 +47,30 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  // Валидатор совпадения паролей
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('password_confirm');
     
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
+    if (!password || !confirmPassword) {
+      return null;
+    }
+
+    if (password.value !== confirmPassword.value) {
+      confirmPassword.setErrors({
+        ...(confirmPassword.errors || {}),
+        passwordMismatch: true
+      });
       return { passwordMismatch: true };
     }
+
+    if (confirmPassword.hasError('passwordMismatch')) {
+      const { passwordMismatch, ...otherErrors } = confirmPassword.errors || {};
+      confirmPassword.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
+    }
+
     return null;
   }
 
-  // Удобный доступ к полям формы
   get f() {
     return this.registerForm.controls;
   }
@@ -72,7 +80,6 @@ export class RegisterComponent implements OnInit {
     this.error = '';
     this.success = false;
 
-    // Останавливаемся, если форма невалидна
     if (this.registerForm.invalid) {
       return;
     }
@@ -83,28 +90,34 @@ export class RegisterComponent implements OnInit {
       next: () => {
         this.success = true;
         this.loading = false;
-        
-        // Перенаправляем на страницу входа через 2 секунды
+
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 2000);
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;
-        
+
         if (err.error) {
-          // Обрабатываем ошибки от сервера
           if (err.error.username) {
-            this.error = 'Это имя пользователя уже занято';
+            this.error = 'This username is already taken';
           } else if (err.error.email) {
-            this.error = 'Этот email уже используется';
+            this.error = Array.isArray(err.error.email)
+              ? err.error.email[0]
+              : 'This email is already in use';
           } else if (err.error.password) {
             this.error = err.error.password[0];
+          } else if (err.error.password_confirm) {
+            this.error = Array.isArray(err.error.password_confirm)
+              ? err.error.password_confirm[0]
+              : err.error.password_confirm;
+          } else if (err.error.non_field_errors) {
+            this.error = err.error.non_field_errors[0];
           } else {
-            this.error = 'Ошибка регистрации. Проверьте введенные данные.';
+            this.error = 'Registration failed. Please check the entered data.';
           }
         } else {
-          this.error = 'Произошла ошибка при регистрации. Попробуйте позже.';
+          this.error = 'An error occurred during registration. Please try again later.';
         }
       }
     });

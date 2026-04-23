@@ -1,4 +1,3 @@
-// src/app/models/film.model.ts
 
 export interface Genre {
   id: number;

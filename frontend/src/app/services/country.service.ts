@@ -12,9 +12,6 @@ export class CountryService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Получить список всех стран
-   */
   getCountries(): Observable<Country[]> {
     return this.http.get<Country[]>(this.apiUrl);
   }
